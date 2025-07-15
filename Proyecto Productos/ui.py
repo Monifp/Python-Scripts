@@ -3,28 +3,28 @@ from colorama import Fore, Style, Back
 
 def mostrar_menu_principal():
     print(Fore.CYAN + "\n====== MENÚ PRINCIPAL ======")
-    print("1. Gestionar Productos")
-    print("2. Gestionar Categorías")
-    print("3. Salir del programa")
+    print("1.📦 Gestionar Productos")
+    print("2.📋 Gestionar Categorías")
+    print("3.🔚 Salir del programa")
     print(Fore.CYAN + "==========================\n")
 
 def mostrar_menu_productos():
     print(Fore.CYAN + "\n--- Menú de Productos ---")
-    print("1. Agregar producto")
-    print("2. Modificar producto") # Nueva opción
-    print("3. Visualizar productos")
-    print("4. Buscar producto")
-    print("5. Eliminar producto")
-    print("6. Volver al menú principal")
+    print("1. ✅ Agregar producto")
+    print("2. ✏️ Modificar producto")
+    print("3. 👁️  Visualizar productos")
+    print("4. 🔍 Buscar producto")
+    print("5. ❌ Eliminar producto")
+    print("6. 🔙 Volver al menú principal")
     print(Fore.CYAN + "-------------------------\n") 
 
 def mostrar_menu_categorias():
     print(Fore.CYAN + "\n--- Menú de Categorías ---")
-    print("1. Agregar categoría")
-    print("2. Visualizar categorías")
-    print("3. Modificar categoría")
-    print("4. Eliminar categoría")
-    print("5. Volver al menú principal")
+    print("1. ✅  Agregar categoría")
+    print("2. 👁️  Visualizar categorías")
+    print("3. ✏️  Modificar categoría")
+    print("4. ❌  Eliminar categoría")
+    print("5. Ⓜ️  Volver al menú principal")
     print(Fore.CYAN + "--------------------------\n")
 
 def obtener_input(mensaje_prompt):
