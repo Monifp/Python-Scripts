@@ -13,7 +13,7 @@ def main():
     while True:
         if db.contar_categorias_db() == 0:
             ui.mostrar_mensaje_error("¡ATENCIÓN! No hay categorías en el sistema.")
-            ui.mostrar_mensaje_info(" El primer paso es crear al menos UNA categoría.")
+            ui.mostrar_mensaje_info(" Se necesita crear al menos UNA categoría para poder avanzar.")
             categorias.gestionar_categorias()
             continue
 
