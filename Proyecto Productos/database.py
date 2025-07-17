@@ -1,16 +1,41 @@
  # database.py
+"""
+Módulo de Acceso a Datos (Data Access Layer). 🗃️
+
+Este script centraliza todas las interacciones con la base de datos SQLite.
+Es responsable de establecer la conexión, crear el esquema inicial de la base
+de datos y proporcionar funciones para realizar todas las operaciones CRUD
+(Crear, Leer, Actualizar, Eliminar) en las tablas `categorias` y `productos`.
+
+El uso de este módulo abstrae la lógica SQL del resto de la aplicación,
+permitiendo que otros módulos (como `productos.py` o `categorias.py`)
+operen con los datos sin necesidad de conocer los detalles de la implementación
+de la base de datos.
+"""
 import sqlite3
 
 DB_NAME = "productos.db"
 
 def obtener_conexion():
-    """Retorna una conexión a la base de datos."""
+    """
+    Establece y retorna una conexión a la base de datos.
+    Args:
+        Esta función no recibe parámetros.
+ 
+    """
     conn = sqlite3.connect(DB_NAME)
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
 def inicializar_db():
-    """Crea las tablas si no existen."""
+    """
+    Crea las tablas `categorias` y `productos` si no existen.
+
+    Args:
+        Esta función no recibe parámetros.
+
+  
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("""
@@ -32,7 +57,15 @@ def inicializar_db():
     conn.close()
 
 def contar_categorias_db():
-    """Retorna el número total de categorías."""
+    """
+    Cuenta y retorna el número total de categorías en la base de datos.
+
+    Args:
+        Esta función no recibe parámetros.
+
+    Retorna:
+        int: El número total de filas en la tabla `categorias`.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM categorias")
@@ -41,7 +74,16 @@ def contar_categorias_db():
     return total
 
 def obtener_categorias_db():
-    """Retorna una lista de todas las categorías."""
+    """
+    Retorna una lista de todas las categorías, ordenadas por nombre.
+
+    Args:
+        Esta función no recibe parámetros.
+
+    Retorna:
+          una lista de tuplas, donde cada tupla representa una
+        categoría con el formato `(id, nombre)`.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("SELECT id, nombre FROM categorias ORDER BY nombre")
@@ -50,7 +92,14 @@ def obtener_categorias_db():
     return categorias
 
 def agregar_categoria_db(nombre):
-    """Agrega una nueva categoría a la base de datos."""
+    """
+    Agrega una nueva categoría a la tabla `categorias`.
+
+    Args:
+        nombre (str): El nombre de la categoría a insertar.
+
+     La función no devuelve ningún valor.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO categorias (nombre) VALUES (?)", (nombre,))
@@ -58,7 +107,15 @@ def agregar_categoria_db(nombre):
     conn.close()
 
 def modificar_categoria_db(id_cat, nuevo_nombre):
-    """Modifica el nombre de una categoría."""
+    """
+    Modifica el nombre de una categoría existente, identificada por su ID.
+
+    Args:
+        id_cat (int): El ID de la categoría que se desea modificar.
+        nuevo_nombre (str): El nuevo nombre para la categoría.
+    
+    La función no devuelve ningún valor.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("UPDATE categorias SET nombre = ? WHERE id = ?", (nuevo_nombre, id_cat))
@@ -66,7 +123,15 @@ def modificar_categoria_db(id_cat, nuevo_nombre):
     conn.close()
 
 def contar_productos_en_categoria_db(id_cat):
-    """Retorna cuántos productos pertenecen a una categoría."""
+    """
+    Retorna cuántos productos están asociados a una categoría específica.
+
+    Args:
+        id_cat (int): El ID de la categoría a consultar.
+
+    Returns:
+        int: El número de productos que pertenecen a la categoría dada.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM productos WHERE categoria_id = ?", (id_cat,))
@@ -75,7 +140,18 @@ def contar_productos_en_categoria_db(id_cat):
     return total
 
 def eliminar_categoria_db(id_cat):
-    """Elimina una categoría de la base de datos."""
+    """
+    Elimina una categoría de la base de datos, identificada por su ID.
+
+    Nota: Esta operación fallará con una excepción `sqlite3.IntegrityError`
+    si la categoría tiene productos asociados, debido a la restricción
+    `ON DELETE RESTRICT` definida en el esquema.
+
+    Args:
+        id_cat (int): El ID de la categoría a eliminar.
+
+    La función no devuelve ningún valor.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM categorias WHERE id = ?", (id_cat,))
@@ -83,7 +159,19 @@ def eliminar_categoria_db(id_cat):
     conn.close()
 
 def obtener_productos_db():
-    """Retorna una lista de todos los productos con sus categorías."""
+    """
+    Retorna una lista de todos los productos con el nombre de su categoría.
+
+    Realiza un JOIN entre las tablas `productos` y `categorias` para incluir
+    el nombre de la categoría en lugar de su ID.
+
+    Args:
+        Esta función no recibe parámetros.
+
+    Retorna:
+        una lista de tuplas, donde cada tupla representa un
+        producto con el formato `(id_producto, nombre_producto, nombre_categoria, precio)`.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     sql = """
@@ -96,7 +184,16 @@ def obtener_productos_db():
     return productos
 
 def agregar_producto_db(nombre, cat_id, precio):
-    """Agrega un nuevo producto a la base de datos."""
+    """
+    Agrega un nuevo producto a la tabla `productos`.
+
+    Args:
+        nombre (str): El nombre del producto.
+        cat_id (int): El ID de la categoría a la que pertenece el producto.
+        precio (int): El precio del producto.
+
+    La función no devuelve ningún valor.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO productos (nombre, categoria_id, precio) VALUES (?, ?, ?)",
@@ -105,7 +202,18 @@ def agregar_producto_db(nombre, cat_id, precio):
     conn.close()
 
 def buscar_productos_db(termino):
-    """Busca productos por un término en su nombre."""
+    """
+    Busca productos cuyo nombre contenga un término de búsqueda.
+
+    La búsqueda no distingue entre mayúsculas y minúsculas.
+
+    Args:
+        termino (str): El texto a buscar dentro del nombre de los productos.
+
+    Retorna:
+       una lista de tuplas con los productos encontrados.
+        Cada tupla tiene el formato `(nombre_producto, nombre_categoria, precio)`.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     sql = """
@@ -118,7 +226,14 @@ def buscar_productos_db(termino):
     return resultados
 
 def eliminar_producto_db(id_prod):
-    """Elimina un producto de la base de datos."""
+    """
+    Elimina un producto de la base de datos, identificado por su ID.
+
+    Args:
+        id_prod (int): El ID del producto a eliminar.
+
+    La función no devuelve ningún valor.
+    """
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM productos WHERE id = ?", (id_prod,))
@@ -128,11 +243,21 @@ def eliminar_producto_db(id_prod):
 def modificar_producto_db(id_prod, campo_a_modificar, nuevo_valor):
     """
     Modifica un campo específico de un producto en la base de datos.
-    
+
+    Utiliza una lista blanca de campos permitidos (`nombre`, `categoria_id`, `precio`)
+    para construir la consulta SQL, previniendo así ataques de
+    inyección SQL.
+
     Args:
         id_prod (int): El ID del producto a modificar.
-        campo_a_modificar (str): El nombre de la columna a cambiar ('nombre', 'categoria_id', 'precio').
-        nuevo_valor: El nuevo valor para el campo.
+        campo_a_modificar (str): El nombre de la columna a cambiar.
+        nuevo_valor: El nuevo valor para el campo especificado.
+
+    La función no devuelve ningún valor.
+
+    Devuelve
+        ValueError: Si el `campo_a_modificar` no está en la lista de
+        campos permitidos.
     """
     # Lista blanca de campos permitidos para evitar inyección SQL
     campos_permitidos = ['nombre', 'categoria_id', 'precio']

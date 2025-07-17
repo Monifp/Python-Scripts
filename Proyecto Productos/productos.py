@@ -1,9 +1,21 @@
  # productos.py
+
+"""
+Módulo de lógica de negocio para la gestión de productos. 📦
+
+Este módulo contiene todas las funciones de alto nivel para manejar las
+operaciones del ciclo de vida de un producto (CRUD: Crear, Leer, Actualizar, Eliminar).
+Actúa como un controlador que orquesta las interacciones entre la interfaz de
+usuario (`ui`) y la capa de acceso a datos (`database`).
+
+"""
+
 import database as db
 import ui
 
 def agregar_nuevo_producto():
-    """Orquesta la adición de un nuevo producto con validaciones."""
+    """Orquesta la adición de un nuevo producto con validaciones.
+    No recibe argumentos ni devuelve ningún valor."""
     categorias = db.obtener_categorias_db()
     if not categorias:
         ui.mostrar_mensaje_error("No hay categorías. Agregue una desde 'Gestionar Categorías'.")
@@ -48,7 +60,8 @@ def agregar_nuevo_producto():
     ui.mostrar_mensaje_exito(f"Producto '{nombre}' agregado.")
 
 def modificar_un_producto():
-    """Orquesta la modificación de un producto con validaciones."""
+    """Orquesta la modificación de un producto con validaciones.
+    No recibe argumentos ni devuelve ningún valor. """
     productos = db.obtener_productos_db()
     if not ui.mostrar_lista_productos(productos):
         return
@@ -118,7 +131,8 @@ def modificar_un_producto():
             ui.mostrar_mensaje_error("Opción inválida.")
 
 def eliminar_un_producto():
-    """Orquesta la eliminación de un producto con validaciones."""
+    """Orquesta la eliminación de un producto con validaciones. 
+    No recibe argumentos ni devuelve ningún valor. """
     productos = db.obtener_productos_db()
     if not ui.mostrar_lista_productos(productos):
         return
@@ -141,7 +155,8 @@ def eliminar_un_producto():
             ui.mostrar_mensaje_error("Entrada no válida. Ingrese un ID numérico o 'S'.")
 
 def buscar_un_producto():
-    """Orquesta la búsqueda de productos."""
+    """Orquesta la búsqueda de productos.
+    No recibe argumentos ni devuelve ningún valor."""
     termino = ui.obtener_input("Ingrese el nombre del producto a buscar: ")
     resultados = db.buscar_productos_db(termino.lower())
     if not resultados:
@@ -150,7 +165,8 @@ def buscar_un_producto():
         ui.mostrar_resultados_busqueda(resultados)
 
 def gestionar_productos():
-    """Bucle principal para la gestión de productos."""
+    """Bucle principal para la gestión de productos.
+    No recibe argumentos ni devuelve ningún valor."""
     while True:
         ui.mostrar_menu_productos()
         opcion = ui.obtener_input("Seleccione una opción: ")

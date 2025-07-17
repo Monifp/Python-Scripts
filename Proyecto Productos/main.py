@@ -1,4 +1,20 @@
- # main.py
+# main.py
+"""
+Módulo principal y punto de entrada para la aplicación de gestión. 🚀
+
+Este script actúa como el orquestador central del sistema. Es responsable de:
+- Inicializar componentes clave como la base de datos y la librería de colores para la UI.
+- Ejecutar el bucle principal de la aplicación, que presenta el menú al usuario.
+- Validar pre-condiciones críticas, como la existencia de categorías antes de operar.
+- Delegar las acciones del usuario a los módulos especializados (`productos`, `categorias`).
+
+Dependencias:
+- colorama: Para dar formato de color a la salida en la consola.
+- database: Módulo de bajo nivel para la interacción con la base de datos.
+- ui: Módulo para todos los elementos de la interfaz de usuario (menús, mensajes).
+- productos: Módulo de lógica de negocio para la gestión de productos.
+- categorias: Módulo de lógica de negocio para la gestión de categorías.
+"""
 from colorama import init
 import database as db
 import ui
@@ -6,7 +22,17 @@ import productos
 import categorias
 
 def main():
-    """Punto de entrada principal de la aplicación."""
+    """
+    Ejecuta el ciclo de vida principal de la aplicación.
+
+    Esta función inicializa la base de datos y la consola, y luego entra en un
+    bucle infinito que presenta el menú principal. Antes de mostrar el menú,
+    verifica si existe al menos una categoría en el sistema; si no es así,
+    fuerza al usuario a crear una para garantizar la integridad de los datos
+    al añadir productos.
+    
+    No recibe argumentos ni devuelve ningún valor.
+    """
     init(autoreset=True)
     db.inicializar_db()
 
